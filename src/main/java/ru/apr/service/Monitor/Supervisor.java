@@ -2,17 +2,14 @@ package ru.apr.service.Monitor;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.PropertyAccessException;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.stereotype.Component;
+import ru.apr.service.ConsitorApplication;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -33,28 +30,41 @@ public class Supervisor {
     }
 
     private void collectCheckers(){
-        try{
-            Collection<File> settingsFiles = FileUtils.listFiles(
+        Collection<File> settingsFiles = null;
+
+        try {
+            settingsFiles = FileUtils.listFiles(
                     new File(modulesPath),
-                    new String[] {"xml"},
+                    new String[]{"xml"},
                     true
             );
+        }
+        catch (IllegalArgumentException e){
+            ConsitorApplication.logger.error("Incorrect modules configuration directory " + modulesPath);
+            ConsitorApplication.logger.error(e.getMessage());
+            ConsitorApplication.logger.error("No module will start");
+        }
 
-            for (File file : settingsFiles) {
-                ApplicationContext moduleContext = new FileSystemXmlApplicationContext(file.getAbsolutePath());
-                CheckerInterface checker = moduleContext.getBean(CheckerInterface.class);
+        try{
+            if(settingsFiles != null) {
+                for (File file : settingsFiles) {
+                    ApplicationContext moduleContext = new FileSystemXmlApplicationContext(file.getAbsolutePath());
+                    CheckerInterface checker = moduleContext.getBean(CheckerInterface.class);
+                    String checkerName = file.getName().substring(0, file.getName().length()-4);
+                    checkers.put(checkerName, checker);
+                    ConsitorApplication.logger.info(checkerName + " has been added to monitoring list");
+                }
+            }
+            else {
+                ConsitorApplication.logger.error("No modules will run due to lack of XML configuration files");
             }
         }
         catch (PropertyAccessException e){
-            System.err.println("Incorrect data for one of properties in settings file");
-            System.err.println(e.getMessage());
-            System.err.println("This module won't start");
+            ConsitorApplication.logger.error("Incorrect data for one of properties in settings file");
+            ConsitorApplication.logger.error(e.getMessage());
+            ConsitorApplication.logger.error("Module won't start");
         }
-        catch (IllegalArgumentException e){
-            System.err.println("Incorrect modules configuration directory " + modulesPath);
-            System.err.println(e.getMessage());
-            System.err.println("No module will start");
-        }
+
     }
 
     private void runCheckers(){
