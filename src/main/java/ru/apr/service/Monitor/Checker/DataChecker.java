@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 @Component
 public class DataChecker extends AbstractChecker implements CheckerInterface{
+
     @Override
     public void check() {
 
@@ -15,5 +16,15 @@ public class DataChecker extends AbstractChecker implements CheckerInterface{
     @Override
     public HashMap<String, String> getCheckResult() {
         return null;
+    }
+
+    @Override
+    public Object getCheckFactor() {
+        return checkFactor;
+    }
+
+    @Override
+    public void setCheckFactor(Object checkFactor) {
+        this.checkFactor = checkFactor.toString();
     }
 }

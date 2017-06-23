@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ConsitorApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ConsitorApplication.class, args);
+		SpringApplication app = new SpringApplication(ConsitorApplication.class);
+		app.run(args);
 	}
 }

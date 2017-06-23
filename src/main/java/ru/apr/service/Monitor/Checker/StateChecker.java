@@ -16,4 +16,14 @@ public class StateChecker extends AbstractChecker implements CheckerInterface {
     public HashMap<String, String> getCheckResult() {
         return null;
     }
+
+    @Override
+    public Object getCheckFactor() {
+        return null;
+    }
+
+    @Override
+    public void setCheckFactor(Object checkFactor) {
+
+    }
 }

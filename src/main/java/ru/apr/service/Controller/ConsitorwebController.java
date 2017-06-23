@@ -6,12 +6,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.apr.service.Entity.Reference;
+import ru.apr.service.Monitor.Supervisor;
+
+import javax.annotation.PostConstruct;
 
 @RestController
 public class ConsitorwebController {
 
     @Autowired
     ApplicationContext context;
+
+    @PostConstruct
+    private void prepareSuprevisor(){
+        Supervisor supervisor = context.getBean(Supervisor.class);
+        supervisor.init();
+    }
 
     @RequestMapping(value={"/"})
     public String index(){
