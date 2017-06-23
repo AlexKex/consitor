@@ -4,5 +4,4 @@ import java.util.HashMap;
 
 public interface CheckerInterface {
     void check();
-    HashMap<String, String> getCheckResult();
 }

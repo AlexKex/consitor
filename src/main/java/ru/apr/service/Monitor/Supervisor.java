@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import ru.apr.service.ConsitorApplication;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -22,11 +23,16 @@ public class Supervisor {
     @Value(value="${modules.path}")
     protected String modulesPath;
 
-    private HashMap<String, CheckerInterface> checkers = new HashMap<String, CheckerInterface>();
+    private HashMap<String, CheckerInterface> checkers = new HashMap<>();
+    private ArrayList<String> slaves = new ArrayList<>();
 
     public void init(){
+        discoverSlaves();
         collectCheckers();
         runCheckers();
+    }
+
+    private void discoverSlaves() {
     }
 
     private void collectCheckers(){
