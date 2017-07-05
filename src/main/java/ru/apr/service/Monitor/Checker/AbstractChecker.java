@@ -1,6 +1,5 @@
 package ru.apr.service.Monitor.Checker;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 abstract public class AbstractChecker {
