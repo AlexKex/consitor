@@ -6,9 +6,14 @@ import ru.apr.service.Monitor.CheckerInterface;
 import java.util.HashMap;
 
 @Component
-public class StateChecker extends AbstractChecker implements CheckerInterface {
+public class StateChecker extends AbstractChecker implements CheckerInterface, Runnable {
     @Override
     public void check() {
+
+    }
+
+    @Override
+    public void init() {
 
     }
 
@@ -19,6 +24,11 @@ public class StateChecker extends AbstractChecker implements CheckerInterface {
 
     @Override
     public void setCheckFactor(Object checkFactor) {
+
+    }
+
+    @Override
+    public void run() {
 
     }
 }

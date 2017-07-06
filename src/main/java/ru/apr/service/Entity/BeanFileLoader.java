@@ -2,6 +2,7 @@ package ru.apr.service.Entity;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import ru.apr.service.ConsitorApplication;
@@ -15,13 +16,16 @@ public class BeanFileLoader {
     @Autowired
     ApplicationContext context;
 
+    @Value(value="${beanconfig.type}")
+    private String configFileType;
+
     public Collection<File> getBeanFiles(String path){
         Collection<File> settingsFiles = null;
 
         try {
             settingsFiles = FileUtils.listFiles(
                     new File(path),
-                    new String[]{"xml"},
+                    new String[]{configFileType},
                     true
             );
         }

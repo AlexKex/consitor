@@ -5,12 +5,15 @@ import ru.apr.service.Entity.DataLoader;
 import ru.apr.service.Monitor.CheckerInterface;
 import ru.apr.service.Monitor.Supervisor;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 
 @Component
-public class DataChecker extends AbstractChecker implements CheckerInterface{
+public class DataChecker extends AbstractChecker implements CheckerInterface, Runnable{
 
+    /**
+     * Check factor here is an SQL-request, which runs on master and on each slave
+     * and check the consistency
+     */
     @Override
     public void check(){
 
@@ -30,5 +33,10 @@ public class DataChecker extends AbstractChecker implements CheckerInterface{
     @Override
     public void setCheckFactor(Object checkFactor) {
         this.checkFactor = checkFactor.toString();
+    }
+
+    @Override
+    public void run() {
+
     }
 }
