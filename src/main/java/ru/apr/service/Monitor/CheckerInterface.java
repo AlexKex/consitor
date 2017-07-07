@@ -1,8 +1,7 @@
 package ru.apr.service.Monitor;
 
-import java.util.HashMap;
-
-public interface CheckerInterface {
+public interface CheckerInterface extends Runnable{
     void check();
-    void init();
+    void init(String checkerName);
+    void setCheckId(String checkId);
 }

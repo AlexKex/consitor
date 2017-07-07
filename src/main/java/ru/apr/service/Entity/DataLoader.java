@@ -1,9 +1,12 @@
 package ru.apr.service.Entity;
 
 import org.springframework.stereotype.Component;
+import ru.apr.service.ConsitorApplication;
+
+import java.sql.*;
 
 @Component
-public class DataLoader {
+public class DataLoader implements Runnable {
 
     private String dbDriver;
     private String dbType;
@@ -11,7 +14,40 @@ public class DataLoader {
     private String dbPassword;
     private String dbHost;
     private String dbName;
+    private String dbPort = "3306";
     private Boolean isMaster = false;
+    private String sqlRequest;
+    private ResultSet result;
+
+    private Connection connection;
+    private Statement statement;
+
+    public void init(){
+        try {
+            Class.forName(this.dbDriver);
+            String dsn = "jdbc:" + this.dbType + "://" + this.dbHost + ":" + this.dbPort + "/" + this.dbName;
+            this.connection = DriverManager.getConnection(dsn, this.dbUser, this.dbPassword);
+            this.statement = this.connection.createStatement();
+        }
+        catch (ClassNotFoundException e) {
+            ConsitorApplication.logger.error("Class " + this.dbDriver + " not found");
+        }
+        catch (SQLException e) {
+            ConsitorApplication.logger.error(e.getMessage());
+        }
+    }
+
+    public void complete(){
+        try {
+            if (this.connection != null) {
+                this.connection.close();
+                this.connection = null;
+            }
+        }
+        catch (SQLException e) {
+            ConsitorApplication.logger.error(e.getMessage());
+        }
+    }
 
     public void setDbDriver(String dbDriver) {
         this.dbDriver = dbDriver;
@@ -69,7 +105,25 @@ public class DataLoader {
         return isMaster;
     }
 
+    public void setSqlRequest(String sqlRequest) {
+        this.sqlRequest = sqlRequest;
+    }
 
+    @Override
+    public void run() {
+        ConsitorApplication.logger.info(dbType + " connection has been started for " + dbHost);
+        init();
 
+        try {
+            result = statement.executeQuery(sqlRequest);
+        } catch (SQLException e) {
+            ConsitorApplication.logger.error("SQLException with query " + sqlRequest);
+        }
 
+        ConsitorApplication.logger.info(dbType + " connection has been completed");
+    }
+
+    synchronized public ResultSet getResult(){
+        return result;
+    }
 }

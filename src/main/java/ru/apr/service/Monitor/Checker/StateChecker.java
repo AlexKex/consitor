@@ -6,14 +6,15 @@ import ru.apr.service.Monitor.CheckerInterface;
 import java.util.HashMap;
 
 @Component
-public class StateChecker extends AbstractChecker implements CheckerInterface, Runnable {
+public class StateChecker extends AbstractChecker implements CheckerInterface {
     @Override
     public void check() {
 
     }
 
     @Override
-    public void init() {
+    public void init(String checkerName) {
+        super.init(checkerName);
 
     }
 
