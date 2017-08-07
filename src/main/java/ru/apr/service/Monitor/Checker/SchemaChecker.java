@@ -1,13 +1,11 @@
 package ru.apr.service.Monitor.Checker;
 
-import ru.apr.service.Monitor.CheckerInterface;
-
-import java.util.HashMap;
+import ru.apr.service.Monitor.Checkable;
 
 /**
  * Created by Alex Pryakhin on 23.06.2017.
  */
-public class SchemaChecker extends AbstractChecker implements CheckerInterface{
+public class SchemaChecker extends AbstractChecker implements Checkable {
     @Override
     public void check() {
 

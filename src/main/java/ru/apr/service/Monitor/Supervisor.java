@@ -6,15 +6,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.stereotype.Component;
-import org.springframework.util.DigestUtils;
 import ru.apr.service.ConsitorApplication;
 import ru.apr.service.Entity.BeanFileLoader;
 import ru.apr.service.Entity.DataLoader;
 
 import java.io.File;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,14 +28,13 @@ public class Supervisor {
     @Value(value="${dataloader.bean.masterfilename}")
     protected String dbMasterFileName;
 
-    private HashMap<String, CheckerInterface> checkers = new HashMap<>();
+    private HashMap<String, Checkable> checkers = new HashMap<>();
     private static ArrayList<DataLoader> slaves = new ArrayList<>();
     private static DataLoader master;
 
     public void init(){
         discoverLandscape();
         collectCheckers();
-        runCheckers();
     }
 
     public static DataLoader getMaster(){
@@ -91,7 +86,7 @@ public class Supervisor {
             if(settingsFiles != null) {
                 for (File file : settingsFiles) {
                     ApplicationContext moduleContext = new FileSystemXmlApplicationContext(file.getAbsolutePath());
-                    CheckerInterface checker = moduleContext.getBean(CheckerInterface.class);
+                    Checkable checker = moduleContext.getBean(Checkable.class);
                     String checkerName = file.getName().substring(0, file.getName().length()-4);
                     checker.init(checkerName);
                     checkers.put(checkerName, checker);
@@ -110,11 +105,28 @@ public class Supervisor {
 
     }
 
-    private void runCheckers() {
+    private void runAllCheckers() {
         ExecutorService checkersThreadPool = Executors.newFixedThreadPool(checkers.size());
 
-        for(Map.Entry<String, CheckerInterface> checkerEntry : checkers.entrySet()){
+        for(Map.Entry<String, Checkable> checkerEntry : checkers.entrySet()){
             checkersThreadPool.submit(checkerEntry.getValue());
         }
+
+        // TODO complete check result
+
+        // close threadpool
+        checkersThreadPool.shutdown();
+    }
+
+    private void runSingleChecker(String checkerName) {
+        Checkable checker = (Checkable)context.getBean(checkerName);
+
+        checker.run();
+
+        while(checker.isRunning()){
+
+        }
+
+        // TODO complete check result
     }
 }

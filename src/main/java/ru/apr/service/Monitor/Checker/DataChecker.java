@@ -2,13 +2,13 @@ package ru.apr.service.Monitor.Checker;
 
 import org.springframework.stereotype.Component;
 import ru.apr.service.ConsitorApplication;
-import ru.apr.service.Monitor.CheckerInterface;
+import ru.apr.service.Monitor.Checkable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
-public class DataChecker extends AbstractChecker implements CheckerInterface{
+class DataChecker extends AbstractChecker implements Checkable {
 
     /**
      * Check factor here is an SQL-request, which runs on master and on each slave
@@ -45,10 +45,6 @@ public class DataChecker extends AbstractChecker implements CheckerInterface{
 
     private void proceedOnMaster() {
         master.setSqlRequest(this.checkFactor);
-        Thread masterThread = new Thread(master);
-        masterThread.run();
-
-        while (masterThread.isAlive()){}
 
         ResultSet masterResult = master.getResult();
         int count = 0;

@@ -2,7 +2,7 @@ package ru.apr.service.Monitor.Checker;
 
 import ru.apr.service.ConsitorApplication;
 import ru.apr.service.Entity.DataLoader;
-import ru.apr.service.Monitor.CheckerInterface;
+import ru.apr.service.Monitor.Checkable;
 import ru.apr.service.Monitor.Supervisor;
 
 import java.security.MessageDigest;
@@ -11,9 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
-abstract public class AbstractChecker implements CheckerInterface {
+abstract public class AbstractChecker implements Checkable {
     protected Boolean checkIsRunning = false;
     protected String checkId;
     protected String checkerName;
@@ -24,6 +23,7 @@ abstract public class AbstractChecker implements CheckerInterface {
 
     protected DataLoader master;
     protected ArrayList<DataLoader> slaves;
+
 
     abstract public Object getCheckFactor();
     abstract public void setCheckFactor(Object checkFactor);
@@ -55,7 +55,7 @@ abstract public class AbstractChecker implements CheckerInterface {
         checkIsRunning = false;
     }
 
-    public Boolean isCheckerRunning(){
+    public Boolean isRunning(){
         return checkIsRunning;
     }
 
@@ -87,4 +87,5 @@ abstract public class AbstractChecker implements CheckerInterface {
     public void run(){
 
     }
+
 }

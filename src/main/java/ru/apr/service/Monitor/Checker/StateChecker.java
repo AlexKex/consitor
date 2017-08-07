@@ -1,12 +1,10 @@
 package ru.apr.service.Monitor.Checker;
 
 import org.springframework.stereotype.Component;
-import ru.apr.service.Monitor.CheckerInterface;
-
-import java.util.HashMap;
+import ru.apr.service.Monitor.Checkable;
 
 @Component
-public class StateChecker extends AbstractChecker implements CheckerInterface {
+public class StateChecker extends AbstractChecker implements Checkable {
     @Override
     public void check() {
 
