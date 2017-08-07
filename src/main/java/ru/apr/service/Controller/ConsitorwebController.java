@@ -13,12 +13,14 @@ import javax.annotation.PostConstruct;
 @RestController
 public class ConsitorwebController {
 
+    Supervisor supervisor;
+
     @Autowired
     ApplicationContext context;
 
     @PostConstruct
     private void prepareSuprevisor(){
-        Supervisor supervisor = context.getBean(Supervisor.class);
+        supervisor = context.getBean(Supervisor.class);
         supervisor.init();
     }
 
@@ -34,6 +36,8 @@ public class ConsitorwebController {
      */
     @RequestMapping(value={"/check/{name}"})
     public String checkConsistency(@PathVariable("name") String checkName){
+        supervisor.runSingleChecker(checkName);
+        // TODO add AMQP
         return "";
     }
 
@@ -43,6 +47,8 @@ public class ConsitorwebController {
      */
     @RequestMapping(value={"/check"})
     public String checkFullConsistency(){
+        supervisor.runAllCheckers();
+        // TODO add AMQP
         return "";
     }
 

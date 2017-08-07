@@ -105,7 +105,7 @@ public class Supervisor {
 
     }
 
-    private void runAllCheckers() {
+    public void runAllCheckers() {
         ExecutorService checkersThreadPool = Executors.newFixedThreadPool(checkers.size());
 
         for(Map.Entry<String, Checkable> checkerEntry : checkers.entrySet()){
@@ -118,7 +118,7 @@ public class Supervisor {
         checkersThreadPool.shutdown();
     }
 
-    private void runSingleChecker(String checkerName) {
+    public void runSingleChecker(String checkerName) {
         Checkable checker = (Checkable)context.getBean(checkerName);
 
         checker.run();
